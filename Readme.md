@@ -1,49 +1,48 @@
 # Explainable Credit Risk Prediction System
 
-An end-to-end machine learning project for predicting credit default risk using structured financial/customer data, with a focus on **data quality, leakage prevention, model evaluation, hyperparameter tuning, and decision-threshold optimization**.
+An end-to-end, production-oriented machine learning system for predicting credit default risk using **XGBoost, probability calibration, SHAP explainability, and FastAPI**.
 
-The project is being developed incrementally toward a production-oriented ML system with explainability and API deployment.
+The project focuses on building a reliable ML pipeline from data validation through model serving, while maintaining **reproducibility, leakage prevention, explainability, and modular architecture**.
 
 ---
 
 ## 🚧 Project Status
 
-**Current Progress: Phase 5 completed**
+**Current Progress: Phase 9 completed**
 
-| Phase                               | Status      |
-| ----------------------------------- | ----------- |
-| Phase 1 — Data Loading & Validation | ✅ Completed |
-| Phase 2 — EDA & Preprocessing       | ✅ Completed |
-| Phase 3 — Baseline Models           | ✅ Completed |
-| Phase 4 — Hyperparameter Tuning     | ✅ Completed |
-| Phase 5 — Threshold Optimization    | ✅ Completed |
-| Phase 6 — Probability Calibration   | ⏳ Planned   |
-| Phase 7 — SHAP Explainability       | ⏳ Planned   |
-| Phase 8 — Model Packaging           | ⏳ Planned   |
-| Phase 9 — FastAPI Backend           | ⏳ Planned   |
-| Phase 10 — Frontend & Deployment    | ⏳ Planned   |
+| Phase                                | Status      |
+| ------------------------------------ | ----------- |
+| Phase 1 — Data Loading & Validation  | ✅ Completed |
+| Phase 2 — EDA & Preprocessing        | ✅ Completed |
+| Phase 3 — Baseline Models            | ✅ Completed |
+| Phase 4 — Hyperparameter Tuning      | ✅ Completed |
+| Phase 5 — Threshold Optimization     | ✅ Completed |
+| Phase 6 — Probability Calibration    | ✅ Completed |
+| Phase 7 — SHAP Explainability        | ✅ Completed |
+| Phase 8 — Model Packaging            | ✅ Completed |
+| Phase 9 — FastAPI Backend            | ✅ Completed |
+| Phase 10 — Frontend, Deployment & QA | ⏳ Planned   |
 
 ---
 
 # 🎯 Project Objective
 
-The goal is to build a complete credit-risk prediction pipeline capable of:
+The objective is to build an end-to-end credit-risk prediction system capable of:
 
-* Loading and validating credit-risk data
+* Validating incoming credit-risk data
 * Performing exploratory data analysis
-* Handling missing values and categorical/numerical features
-* Preventing data leakage
-* Training baseline classification models
-* Training and tuning an XGBoost model
-* Evaluating models using appropriate classification metrics
-* Optimizing the prediction threshold according to a defined business objective
-* Producing reliable probability estimates
-* Providing interpretable predictions using SHAP
-* Serving predictions through a FastAPI backend
-* Providing a user-facing web interface
-* Deploying the final application
+* Building leakage-safe preprocessing pipelines
+* Training classification models
+* Tuning XGBoost
+* Optimizing classification thresholds
+* Calibrating predicted probabilities
+* Generating SHAP-based explanations
+* Packaging reusable ML artifacts
+* Serving predictions through a REST API
+* Providing transparent prediction information
+* Deploying the complete application
 
-The final system will separate:
+The final system separates three important concepts:
 
 ```text
 Probability Prediction
@@ -51,15 +50,25 @@ Probability Prediction
 Threshold Decision
         ↓
 Risk Classification
+```
+
+while explainability operates separately:
+
+```text
+Processed Input
         ↓
-Model Explanation
+ML Model
+        ↓
+SHAP
+        ↓
+Feature Contributions
 ```
 
 ---
 
 # 🏗️ Current ML Pipeline
 
-The current pipeline is:
+The project currently follows:
 
 ```text
 Raw Dataset
@@ -74,14 +83,18 @@ Preprocessing
      ↓
 Baseline Models
      ↓
-XGBoost Hyperparameter Tuning
+XGBoost Tuning
      ↓
 Threshold Optimization
      ↓
-Final Evaluation
+Probability Calibration
+     ↓
+SHAP Explainability
+     ↓
+Model Packaging
+     ↓
+FastAPI
 ```
-
-Future versions will extend this pipeline with calibration, explainability, model packaging, API serving, and deployment.
 
 ---
 
@@ -99,7 +112,9 @@ credit-risk-ml/
 │   ├── 01_eda.ipynb
 │   ├── 02_baseline_models.ipynb
 │   ├── 03_model_tuning.ipynb
-│   └── 04_threshold_optimization.ipynb
+│   ├── 04_threshold_optimization.ipynb
+│   ├── 05_calibration.ipynb
+│   └── 06_shap_analysis.ipynb
 │
 ├── src/
 │   ├── __init__.py
@@ -126,18 +141,58 @@ credit-risk-ml/
 │   │   ├── evaluate.py
 │   │   └── tune.py
 │   │
-│   └── optimization/
+│   ├── optimization/
+│   │   ├── __init__.py
+│   │   └── threshold.py
+│   │
+│   ├── calibration/
+│   │   ├── __init__.py
+│   │   ├── calibrator.py
+│   │   └── evaluate.py
+│   │
+│   ├── explainability/
+│   │   ├── __init__.py
+│   │   ├── shap_explainer.py
+│   │   ├── global_explanation.py
+│   │   └── local_explanation.py
+│   │
+│   └── artifacts/
 │       ├── __init__.py
-│       └── threshold.py
+│       ├── save.py
+│       └── load.py
+│
+├── api/
+│   ├── __init__.py
+│   ├── main.py
+│   ├── dependencies.py
+│   │
+│   ├── routes/
+│   │   ├── __init__.py
+│   │   ├── health.py
+│   │   ├── prediction.py
+│   │   └── model_info.py
+│   │
+│   ├── schemas/
+│   │   ├── __init__.py
+│   │   ├── prediction.py
+│   │   └── response.py
+│   │
+│   └── services/
+│       ├── __init__.py
+│       ├── prediction_service.py
+│       └── explanation_service.py
 │
 ├── artifacts/
 │   ├── models/
+│   ├── calibration/
 │   ├── thresholds/
 │   └── metadata/
 │
 ├── reports/
 │   ├── evaluation/
-│   └── threshold_analysis/
+│   ├── calibration/
+│   ├── threshold_analysis/
+│   └── shap/
 │
 ├── tests/
 │   ├── test_loader.py
@@ -146,11 +201,16 @@ credit-risk-ml/
 │   ├── test_models.py
 │   ├── test_evaluation.py
 │   ├── test_tuning.py
-│   └── test_threshold.py
+│   ├── test_threshold.py
+│   ├── test_calibration.py
+│   ├── test_shap.py
+│   ├── test_artifacts.py
+│   └── test_api.py
 │
 ├── requirements.txt
-├── README.md
-└── .gitignore
+├── .env.example
+├── .gitignore
+└── README.md
 ```
 
 ---
@@ -164,26 +224,19 @@ The first phase establishes a reliable data foundation.
 * Dataset loading
 * File validation
 * Target-column validation
-* Basic schema validation
+* Schema validation
 * Missing-value analysis
 * Numerical/categorical feature identification
 * Invalid target detection
 * Dataset structure checks
 
-### Main Components
-
-```text
-src/data/loader.py
-src/data/validator.py
-```
-
-The validation layer helps prevent invalid or unexpected data from entering the ML pipeline.
+The validation layer prevents malformed or unexpected data from silently entering the ML pipeline.
 
 ---
 
 # 🔹 Phase 2 — EDA & Preprocessing
 
-The second phase focuses on understanding the dataset and preparing it for machine learning.
+This phase focuses on understanding the dataset and creating a leakage-safe preprocessing pipeline.
 
 ### Implemented
 
@@ -198,11 +251,9 @@ The second phase focuses on understanding the dataset and preparing it for machi
 * Categorical preprocessing
 * Reproducible data splitting
 
-### Important Principle
+### Leakage Prevention
 
-The preprocessing pipeline is designed to prevent **data leakage**.
-
-Preprocessing transformations are fitted only on the training data and then applied to validation/test data.
+Preprocessing transformations are fitted only on training data.
 
 ```text
 Training Data
@@ -211,7 +262,7 @@ Fit Preprocessor
      ↓
 Transform Training Data
 
-Validation/Test Data
+Test Data
      ↓
 Transform Using Existing Preprocessor
 ```
@@ -220,7 +271,7 @@ Transform Using Existing Preprocessor
 
 # 🔹 Phase 3 — Baseline Models
 
-Baseline models establish a performance reference before more advanced optimization.
+Baseline models establish a reference point before optimization.
 
 ### Models
 
@@ -229,7 +280,7 @@ Baseline models establish a performance reference before more advanced optimizat
 
 ### Evaluation Metrics
 
-The project evaluates classification performance using metrics such as:
+The system evaluates models using multiple metrics:
 
 * ROC AUC
 * PR AUC / Average Precision
@@ -239,23 +290,19 @@ The project evaluates classification performance using metrics such as:
 * Brier Score
 * Log Loss
 
-Metrics are selected according to the characteristics of the credit-risk classification problem.
-
-### Validation Strategy
-
-Stratified cross-validation is used where appropriate to preserve class distribution.
+Stratified validation is used where appropriate to preserve class distribution.
 
 The held-out test set is kept separate from model-selection decisions.
 
 ---
 
-# 🔹 Phase 4 — Hyperparameter Tuning
+# 🔹 Phase 4 — XGBoost Hyperparameter Tuning
 
-After establishing baseline performance, the XGBoost model is tuned using randomized hyperparameter search.
+The XGBoost model is optimized using randomized hyperparameter search.
 
 ### Tuned Parameters
 
-The search space can include:
+The configurable search space includes parameters such as:
 
 ```text
 n_estimators
@@ -268,159 +315,424 @@ reg_alpha
 reg_lambda
 ```
 
-### Goals
+### Objectives
 
 * Improve generalization
 * Reduce overfitting
-* Find a stronger XGBoost configuration
-* Select the final model using validation/cross-validation performance
+* Identify a stronger XGBoost configuration
+* Select the model using validation/cross-validation performance
 
-The primary model-selection metric is configurable and documented with the experiment.
+The model-selection metric is explicitly documented rather than hidden inside the training process.
 
 ---
 
 # 🔹 Phase 5 — Threshold Optimization
 
-A classification model produces a probability:
+Classification models produce probabilities rather than inherently producing a binary decision.
+
+The system therefore separates:
 
 ```text
-P(default)
-```
-
-A threshold is then used to convert that probability into a binary prediction.
-
-For example:
-
-```text
-Probability >= threshold
-        ↓
-     Default
-
-Probability < threshold
-        ↓
-     Non-default
+Probability
+     ↓
+Threshold
+     ↓
+Binary Prediction
 ```
 
 The default `0.5` threshold is not automatically assumed to be optimal.
 
-### Supported Optimization Strategies
+### Supported Strategies
 
-The threshold optimization framework can support objectives such as:
+The threshold optimization framework can support:
 
-* Maximize F1
-* Meet minimum recall
-* Meet minimum precision
-* Minimize an explicit business cost function
+* Maximizing F1
+* Meeting minimum recall
+* Meeting minimum precision
+* Minimizing an explicit cost function
 
-### Example
+### Leakage Prevention
 
-```text
-Predicted Probability = 0.72
+Threshold selection is performed using validation data or out-of-fold predictions.
 
-Threshold = 0.50
-        ↓
-Default
-
-Threshold = 0.80
-        ↓
-Non-default
-```
-
-The selected threshold is saved as a project artifact so that the same decision rule can later be used by the production API.
-
-### Important Principle
-
-Threshold optimization does **not** use the final held-out test set for selecting the threshold.
-
-```text
-Training Data
-      ↓
-Model Training
-      ↓
-Validation / OOF Predictions
-      ↓
-Threshold Optimization
-      ↓
-Final Test Evaluation
-```
+The final held-out test set is not used to choose the threshold.
 
 ---
 
-# 📊 Evaluation Philosophy
+# 🔹 Phase 6 — Probability Calibration
 
-This project does not rely on accuracy alone.
+The model's raw probabilities are calibrated to improve their correspondence with observed outcomes.
 
-Credit-risk datasets can contain class imbalance, meaning accuracy may provide an incomplete picture of model performance.
+### Calibration
 
-Therefore, the project considers multiple metrics:
+The project supports probability calibration using methods such as:
 
-| Metric      | Purpose                                     |
-| ----------- | ------------------------------------------- |
-| ROC AUC     | Ranking ability across thresholds           |
-| PR AUC      | Performance under class imbalance           |
-| Precision   | Reliability of positive/default predictions |
-| Recall      | Ability to identify defaults                |
-| F1          | Balance between precision and recall        |
-| Brier Score | Probability quality                         |
-| Log Loss    | Quality of predicted probabilities          |
+* Sigmoid / Platt scaling
 
-The final model-selection strategy and threshold strategy are explicitly recorded rather than hidden inside the implementation.
+The calibrated model is evaluated against the uncalibrated model.
+
+### Evaluation
+
+Calibration analysis includes metrics such as:
+
+* Brier Score
+* Log Loss
+* ROC AUC
+* PR AUC
+* Calibration curves
+
+An important distinction is maintained:
+
+> Calibration improves probability reliability; it does not necessarily improve ranking metrics such as ROC AUC.
 
 ---
 
-# 🔐 Data Leakage Prevention
+# 🔹 Phase 7 — SHAP Explainability
 
-Avoiding data leakage is a core design requirement.
+SHAP is used to provide model explanations at both global and individual prediction levels.
 
-The project follows these principles:
+### Global Explainability
 
-* Test data remains isolated
-* Preprocessors are fitted only on training data
-* Model tuning does not use the final test set
-* Threshold selection does not use the final test set
-* Validation/cross-validation is used for model-selection decisions
-* Test data is reserved for final evaluation
+The project generates:
+
+* SHAP summary plots
+* SHAP feature importance
+* Global feature contribution analysis
+
+### Local Explainability
+
+Individual predictions can be explained using feature-level SHAP contributions.
 
 Conceptually:
 
 ```text
-                 ┌───────────────┐
-                 │  Raw Dataset  │
-                 └───────┬───────┘
-                         │
-                    Train / Test
-                    Split
-                    /       \
-                   /         \
-              Training       Test
-                 │              │
-          Model Selection       │
-          Tuning                │
-          Threshold             │
-                 │              │
-                 └──────┬───────┘
-                        │
-                  Final Evaluation
+Input
+  ↓
+Model
+  ↓
+Prediction Probability
+  ↓
+SHAP Contributions
+  ↓
+Top Influencing Features
 ```
+
+### Important Limitation
+
+SHAP explanations describe **how the model uses features**.
+
+They should not be interpreted as proof that a feature caused the customer's outcome.
+
+---
+
+# 🔹 Phase 8 — Model Packaging
+
+The trained ML system is packaged into reusable, versioned artifacts.
+
+Example:
+
+```text
+artifacts/
+├── models/
+│   └── credit_risk_model/
+│       └── v1/
+│           ├── model.joblib
+│           ├── preprocessor.joblib
+│           └── shap_metadata.json
+│
+├── calibration/
+│   └── v1/
+│       └── calibration.joblib
+│
+├── thresholds/
+│   └── v1/
+│       └── threshold.json
+│
+└── metadata/
+    └── v1/
+        └── model_metadata.json
+```
+
+The exact artifact structure may vary depending on the implementation.
+
+### Metadata
+
+Metadata can include:
+
+* Model name
+* Model version
+* Model type
+* Calibration method
+* Threshold
+* Threshold strategy
+* Feature count
+* Feature names
+* Target definition
+* Dataset identifier
+* Training timestamp
+* Python/library versions
+* Evaluation metrics
+* Calibration metrics
+* Git commit when available
+
+Sensitive applicant information is not stored in model metadata.
+
+---
+
+# 🔹 Phase 9 — FastAPI Backend
+
+The packaged ML system is exposed through a REST API using FastAPI.
+
+The API loads existing artifacts instead of retraining the model.
+
+### Backend Architecture
+
+```text
+Client
+  ↓
+FastAPI
+  ↓
+Pydantic Validation
+  ↓
+Prediction Service
+  ↓
+Preprocessing
+  ↓
+XGBoost
+  ↓
+Calibration
+  ↓
+Probability
+  ↓
+Threshold
+  ↓
+Prediction
+```
+
+SHAP explanations are available through a separate explanation flow.
+
+---
+
+## API Endpoints
+
+### Health Check
+
+```text
+GET /health
+```
+
+Used to verify that the API is running and the model artifacts are available.
+
+---
+
+### Model Information
+
+```text
+GET /model-info
+```
+
+Returns safe model metadata such as:
+
+* Model name
+* Model version
+* Model type
+* Calibration method
+* Decision threshold
+* Feature information
+
+---
+
+### Prediction
+
+```text
+POST /predict
+```
+
+Accepts applicant feature data and returns a prediction.
+
+Conceptual response:
+
+```json
+{
+  "prediction": 1,
+  "risk_label": "default",
+  "default_probability": 0.73,
+  "threshold": 0.50,
+  "model_version": "v1.0.0"
+}
+```
+
+The actual response fields depend on the implemented API schema.
+
+---
+
+### Explanation
+
+```text
+POST /explain
+```
+
+Generates a prediction together with SHAP-based feature contributions.
+
+Conceptual response:
+
+```json
+{
+  "default_probability": 0.73,
+  "prediction": 1,
+  "explanation": [
+    {
+      "feature": "feature_a",
+      "value": 42,
+      "contribution": 0.18
+    },
+    {
+      "feature": "feature_b",
+      "value": 3,
+      "contribution": -0.11
+    }
+  ]
+}
+```
+
+---
+
+# 📖 Interactive API Documentation
+
+FastAPI provides interactive documentation through:
+
+```text
+/docs
+```
+
+and:
+
+```text
+/redoc
+```
+
+These interfaces allow the API endpoints and schemas to be inspected and tested during development.
+
+---
+
+# 🔐 API Design Principles
+
+The backend follows these principles:
+
+* Models are loaded from trusted artifacts
+* Models are not retrained on API startup
+* Preprocessing is reused from the ML pipeline
+* Thresholds are loaded from configuration/artifacts
+* Model versions are loaded from metadata
+* Input validation is handled through Pydantic
+* API errors are handled without exposing internal details
+* Sensitive information is not returned to clients
+* ML logic is separated from API logic
 
 ---
 
 # 🧪 Testing
 
-The project includes tests for the major components of the ML pipeline.
+Testing covers the major components of the system.
 
-Current testing areas include:
+### Data
 
 * Data loading
-* Data validation
+* Schema validation
+* Target validation
+
+### Features
+
 * Preprocessing
 * Train/test splitting
+* Leakage prevention
+
+### Models
+
 * Model creation
 * Model evaluation
 * Hyperparameter tuning
-* Threshold optimization
 
-The goal is to ensure that ML components behave consistently and fail clearly when invalid inputs are supplied.
+### Optimization
+
+* Threshold calculation
+* Threshold validation
+
+### Calibration
+
+* Calibration fitting
+* Probability range validation
+* Calibration metrics
+
+### Explainability
+
+* SHAP explainer initialization
+* SHAP value/feature alignment
+* Global explanation
+* Local explanation
+
+### Artifacts
+
+* Artifact saving
+* Artifact loading
+* Metadata validation
+* Model reload and prediction
+
+### API
+
+* Health endpoint
+* Model information
+* Valid prediction
+* Invalid input
+* Missing feature
+* Probability validation
+* Threshold application
+* Explanation endpoint
+
+---
+
+# 📊 Evaluation Philosophy
+
+The project does not rely on accuracy alone.
+
+Credit-risk classification can involve class imbalance, so multiple metrics are considered.
+
+| Metric      | Purpose                                                        |
+| ----------- | -------------------------------------------------------------- |
+| ROC AUC     | Measures ranking ability across thresholds                     |
+| PR AUC      | Useful for evaluating performance under class imbalance        |
+| Precision   | Measures correctness among predicted positive/default cases    |
+| Recall      | Measures how many actual positive/default cases are identified |
+| F1          | Harmonic mean of precision and recall                          |
+| Brier Score | Measures probability prediction quality                        |
+| Log Loss    | Evaluates probabilistic predictions                            |
+
+Actual model metrics should be reported from the project's experiments rather than manually entered or invented.
+
+---
+
+# 🔐 Data Leakage Prevention
+
+Leakage prevention is maintained throughout the complete pipeline.
+
+```text
+Raw Dataset
+     ↓
+Train / Test Split
+     ↓
+Training Data
+     ├── Preprocessing
+     ├── Model Training
+     ├── Hyperparameter Tuning
+     ├── Calibration
+     └── Threshold Optimization
+     
+Held-out Test Data
+     ↓
+Final Evaluation
+```
+
+The test set is kept isolated from model-selection decisions.
 
 ---
 
@@ -440,6 +752,15 @@ The goal is to ensure that ML components behave consistently and fail clearly wh
 * scikit-learn
 * XGBoost
 
+### Explainable AI
+
+* SHAP
+
+### API
+
+* FastAPI
+* Pydantic
+
 ### Development
 
 * Jupyter Notebook
@@ -449,145 +770,123 @@ The goal is to ensure that ML components behave consistently and fail clearly wh
 
 ### Planned
 
-* SHAP
-* FastAPI
-* Pydantic
-* HTML/CSS/JavaScript
-* Render or similar deployment platform
+* HTML
+* CSS
+* JavaScript
+* Cloud deployment
 
 ---
 
-# 📦 Current Artifacts
+# 🔮 Phase 10 — Next Step
 
-The project is designed to save important ML artifacts rather than relying only on notebooks.
+The remaining phase is:
 
-Current artifact categories include:
+## Frontend + Deployment + Production QA
 
-```text
-artifacts/
-├── models/
-├── thresholds/
-└── metadata/
-```
+The planned final phase will add:
 
-These will later be expanded to include calibrated models and explainability configuration.
+### Frontend
 
----
-
-# 🔮 Upcoming Phases
-
-## Phase 6 — Probability Calibration
-
-Improve the reliability of predicted default probabilities using calibration techniques such as sigmoid/Platt scaling.
-
----
-
-## Phase 7 — SHAP Explainability
-
-Add:
-
-* Global feature importance
-* SHAP summary plots
-* Local explanations
-* Per-prediction feature contributions
-
-The explanation layer will explain **model behavior**, not claim that a feature causes a customer's outcome.
-
----
-
-## Phase 8 — Model Packaging
-
-Create versioned, reusable model artifacts containing:
-
-* Model
-* Preprocessor
-* Calibration configuration
-* Threshold
-* Metadata
-* Explanation configuration
-
----
-
-## Phase 9 — FastAPI Backend
-
-Build an API capable of:
-
-```text
-Input Customer Data
-        ↓
-Preprocessing
-        ↓
-Model
-        ↓
-Probability
-        ↓
-Threshold
-        ↓
-Risk Prediction
-        ↓
-Explanation
-```
-
----
-
-## Phase 10 — Frontend, Deployment & QA
-
-Build a web interface where users can enter customer information and receive:
-
-* Default probability
+* User input form
+* Prediction interface
+* Probability display
 * Risk classification
-* Prediction explanation
+* Threshold display
+* SHAP explanation visualization
 * Model information
 
-The final application will then be tested and deployed.
+### Deployment
+
+* Production configuration
+* API deployment
+* Frontend deployment
+* CORS configuration
+* Environment configuration
+
+### QA
+
+* End-to-end testing
+* Error handling
+* API/frontend integration testing
+* Deployment verification
+* Final documentation
+
+The target architecture will be:
+
+```text
+                 USER
+                   │
+                   ▼
+          ┌─────────────────┐
+          │    Frontend     │
+          └────────┬────────┘
+                   │
+                   ▼
+          ┌─────────────────┐
+          │     FastAPI     │
+          └────────┬────────┘
+                   │
+                   ▼
+          ┌─────────────────┐
+          │  Preprocessing  │
+          └────────┬────────┘
+                   │
+                   ▼
+          ┌─────────────────┐
+          │    XGBoost      │
+          └────────┬────────┘
+                   │
+                   ▼
+          ┌─────────────────┐
+          │   Calibration   │
+          └────────┬────────┘
+                   │
+                   ▼
+           Default Probability
+                   │
+                   ▼
+          ┌─────────────────┐
+          │    Threshold    │
+          └────────┬────────┘
+                   │
+                   ▼
+            Risk Prediction
+                   │
+             ┌─────┴─────┐
+             ▼           ▼
+           SHAP       Response
+             │           │
+             └─────┬─────┘
+                   ▼
+               Frontend
+```
 
 ---
 
-# 🚀 Target Final Architecture
+# 🚀 Target Final System
 
-The completed project is intended to follow:
+After Phase 10, the project will progress from:
 
 ```text
-                    ┌─────────────────┐
-                    │   User / Client │
-                    └────────┬────────┘
-                             │
-                             ▼
-                    ┌─────────────────┐
-                    │    FastAPI      │
-                    └────────┬────────┘
-                             │
-                             ▼
-                    ┌─────────────────┐
-                    │   Preprocessor  │
-                    └────────┬────────┘
-                             │
-                             ▼
-                    ┌─────────────────┐
-                    │    XGBoost      │
-                    └────────┬────────┘
-                             │
-                   ┌─────────┴─────────┐
-                   ▼                   ▼
-             Probability          SHAP
-                   │             Explanation
-                   ▼
-             Calibration
-                   │
-                   ▼
-              Threshold
-                   │
-                   ▼
-            Final Prediction
+ML Experiment
+      ↓
+Reusable ML Pipeline
+      ↓
+Explainable ML System
+      ↓
+FastAPI Backend
+      ↓
+Web Application
+      ↓
+Deployed ML Application
 ```
 
 ---
 
 # 🎓 Learning Objectives
 
-This project is designed to demonstrate practical understanding of:
+This project demonstrates practical knowledge of:
 
-* End-to-end ML pipelines
 * Data validation
 * Exploratory data analysis
 * Feature preprocessing
@@ -596,12 +895,17 @@ This project is designed to demonstrate practical understanding of:
 * Cross-validation
 * Hyperparameter optimization
 * XGBoost
-* Probability prediction
+* Probability calibration
 * Threshold optimization
 * Model evaluation
 * Explainable AI
+* SHAP
 * ML artifact management
-* API-based model serving
+* Model versioning
+* REST APIs
+* FastAPI
+* Pydantic
+* ML testing
 * Production-oriented ML architecture
 
 ---
@@ -610,15 +914,13 @@ This project is designed to demonstrate practical understanding of:
 
 This project is an educational and portfolio implementation of a credit-risk prediction system.
 
-It should not be treated as a real-world lending or financial decision system without appropriate validation, governance, fairness assessment, regulatory review, security controls, and domain-specific oversight.
+A real-world lending or financial decision system would require additional validation, governance, fairness assessment, security controls, regulatory review, monitoring, and domain-specific oversight.
 
 ---
 
-# 📌 Development Philosophy
+# 📌 Development Principles
 
-The project is being developed incrementally rather than building everything inside a single notebook.
-
-Core principles:
+The project is developed incrementally with an emphasis on:
 
 ```text
 Reproducibility
@@ -631,22 +933,12 @@ Testability
       +
 Explainability
       +
+Versioned Artifacts
+      +
 Production Readiness
 ```
 
-The objective is to move from:
-
-```text
-ML Experiment
-      ↓
-Reusable ML Pipeline
-      ↓
-Explainable ML System
-      ↓
-Production API
-      ↓
-Deployable Application
-```
+The goal is not simply to train a model, but to demonstrate how an ML model can be transformed into a **reusable and explainable software system**.
 
 ---
 
@@ -654,4 +946,4 @@ Deployable Application
 
 **Ashutosh**
 
-Built as a machine-learning portfolio project with a focus on practical ML engineering and explainable AI.
+Machine Learning / Data Analytics Portfolio Project
