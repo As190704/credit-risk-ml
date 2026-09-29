@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: credit-risk-api
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn api.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: CREDIT_RISK_TARGET_COLUMN
+        sync: false
+      - key: CREDIT_RISK_MODEL_VERSION
+        value: v1.0.0
+      - key: CREDIT_RISK_CORS_ORIGINS
+        sync: false
+      - key: CREDIT_RISK_ARTIFACTS_MODELS_DIR
+        value: artifacts/models
+      - key: CREDIT_RISK_ARTIFACTS_THRESHOLDS_DIR
+        value: artifacts/thresholds
+      - key: CREDIT_RISK_ARTIFACTS_METADATA_DIR
+        value: artifacts/metadata
+
+  - type: web
+    name: credit-risk-frontend
+    env: static
+    buildCommand: ""
+    staticPublishPath: frontend
+    envVars: []
